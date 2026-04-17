@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ChiTiêu - Quản lý tài chính cá nhân</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+
+    <!-- Nút toggle (luôn hiển thị) -->
+    <button class="toggle-btn" id="toggle-btn" onclick="toggleSidebar()">☰</button>
+
+    <!-- Nội dung sidebar (ẩn khi thu gọn) -->
+    <div class="sidebar-inner" id="sidebar-inner">
+      <div class="logo">
+        <span class="logo-icon">💼</span>
+        <div>
+          <div class="logo-title">ChiTiêu</div>
+          <div class="logo-sub">Quản lý tài chính cá nhân</div>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="#" class="nav-item active" data-tab="tong-quan"><span class="nav-icon">⊞</span> Tổng quan</a>
+        <a href="#" class="nav-item" data-tab="giao-dich"><span class="nav-icon">📋</span> Giao dịch</a>
+        <a href="#" class="nav-item" data-tab="ngan-sach"><span class="nav-icon">⏰</span> Ngân sách</a>
+        <a href="#" class="nav-item" data-tab="muc-tieu"><span class="nav-icon">🎯</span> Mục tiêu</a>
+        <a href="#" class="nav-item" data-tab="bao-cao"><span class="nav-icon">📊</span> Báo cáo</a>
+        <a href="#" class="nav-item" data-tab="cai-dat"><span class="nav-icon">⚙️</span> Cài đặt</a>
+      </nav>
+
+      <div class="premium-banner">
+        <div class="premium-icon">👑</div>
+        <div>
+          <div class="premium-title">Nâng cấp lên Premium</div>
+          <div class="premium-sub">Mở khóa thêm nhiều tính năng</div>
+        </div>
+        <span class="premium-arrow">›</span>
+      </div>
+
+      <div class="user-info">
+        <img src="https://thiepcuoi2k.com/wp-content/uploads/2025/04/avatar-mac-dinh-7.jpg" alt="avatar" class="user-avatar" />
+        <div>
+          <div class="user-name">Người dùng</div>
+          <div class="user-link">Xem hồ sơ</div>
+        </div>
+        <span>⌄</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- NỘI DUNG CHÍNH -->
+  <main class="main-content" id="main-content">
+
+    <!-- TAB 1: TỔNG QUAN -->
+    <section id="tab-tong-quan" class="tab-content active">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Xin chào ! 👋</h1>
+          <p class="page-sub">Tổng quan tình hình tài chính của bạn</p>
+        </div>
+        <div class="header-right">
+          <div class="date-filter"><input type="month" id="month-filter" /></div>
+          <button class="bell-btn">🔔 <span class="badge" id="notif-count">0</span></button>
+        </div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card green"><div class="stat-label">Tổng thu nhập</div><div class="stat-value" id="total-income">0 đ</div><div class="stat-change positive" id="income-change">--</div></div>
+        <div class="stat-card red"><div class="stat-label">Tổng chi tiêu</div><div class="stat-value" id="total-expense">0 đ</div><div class="stat-change negative" id="expense-change">--</div></div>
+        <div class="stat-card blue"><div class="stat-label">Số dư hiện tại</div><div class="stat-value" id="total-balance">0 đ</div><div class="stat-change" id="balance-change">--</div></div>
+        <div class="stat-card purple"><div class="stat-label">Mục tiêu đang hoạt động</div><div class="stat-value" id="active-goals">0</div><div class="stat-link" onclick="switchTab('muc-tieu')">Xem chi tiết mục tiêu</div></div>
+      </div>
+      <div class="charts-row">
+        <div class="card chart-card">
+          <div class="card-title">Biểu đồ chi tiêu</div>
+          <div class="card-sub">Phân bổ chi tiêu theo danh mục</div>
+          <div class="donut-wrapper"><canvas id="donut-chart" width="200" height="200"></canvas><div class="donut-center"><div class="donut-total" id="donut-total">0 đ</div><div class="donut-label">Tổng chi tiêu</div></div></div>
+          <div class="legend" id="donut-legend"></div>
+        </div>
+        <div class="card chart-card">
+          <div class="card-title">Xu hướng chi tiêu</div>
+          <div class="card-sub">30 ngày gần đây</div>
+          <canvas id="line-chart" width="400" height="220"></canvas>
+        </div>
+      </div>
+      <div class="bottom-row">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Giao dịch gần đây</span><a href="#" class="see-all" onclick="switchTab('giao-dich')">Xem tất cả</a></div>
+          <ul class="transaction-list" id="recent-transactions"><li class="empty-msg">Chưa có giao dịch nào.</li></ul>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title" id="budget-month-title">Ngân sách tháng</span><a href="#" class="see-all" onclick="switchTab('ngan-sach')">Xem tất cả</a></div>
+          <ul class="budget-list" id="budget-overview"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: GIAO DỊCH -->
+    <section id="tab-giao-dich" class="tab-content">
+      <div class="page-header"><h1 class="page-title">Giao dịch</h1></div>
+      <div class="card form-card">
+        <div class="card-title">➕ Thêm giao dịch mới</div>
+        <div class="form-grid">
+          <div class="form-group"><label>Loại</label><select id="tx-type"><option value="expense">Chi tiêu</option><option value="income">Thu nhập</option></select></div>
+          <div class="form-group"><label>Danh mục</label><select id="tx-category"><option value="Ăn uống">🍜 Ăn uống</option><option value="Di lại">🚗 Di lại</option><option value="Mua sắm">🛍️ Mua sắm</option><option value="Hóa đơn">💡 Hóa đơn</option><option value="Giải trí">🎮 Giải trí</option><option value="Thu nhập">💰 Thu nhập</option><option value="Khác">📦 Khác</option></select></div>
+          <div class="form-group"><label>Số tiền (đ)</label><input type="number" id="tx-amount" placeholder="VD: 150000" min="0" /></div>
+          <div class="form-group"><label>Mô tả</label><input type="text" id="tx-desc" placeholder="VD: Cà phê buổi sáng" /></div>
+          <div class="form-group"><label>Ngày</label><input type="date" id="tx-date" /></div>
+          <div class="form-group form-btn-group"><button class="btn-primary" onclick="addTransaction()">💾 Lưu giao dịch</button></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Danh sách giao dịch</div>
+        <table class="data-table"><thead><tr><th>Ngày</th><th>Mô tả</th><th>Danh mục</th><th>Số tiền</th><th>Xóa</th></tr></thead><tbody id="transaction-table-body"><tr><td colspan="5" class="empty-msg">Chưa có giao dịch.</td></tr></tbody></table>
+      </div>
+    </section>
+
+    <!-- TAB 3: NGÂN SÁCH -->
+    <section id="tab-ngan-sach" class="tab-content">
+      <div class="page-header"><h1 class="page-title">Ngân sách</h1></div>
+      <div class="card form-card">
+        <div class="card-title">➕ Thêm ngân sách mới</div>
+        <div class="form-grid">
+          <div class="form-group"><label>Danh mục</label><select id="budget-category"><option value="Ăn uống">🍜 Ăn uống</option><option value="Di lại">🚗 Di lại</option><option value="Mua sắm">🛍️ Mua sắm</option><option value="Hóa đơn">💡 Hóa đơn</option><option value="Giải trí">🎮 Giải trí</option><option value="Khác">📦 Khác</option></select></div>
+          <div class="form-group"><label>Hạn mức (đ/tháng)</label><input type="number" id="budget-limit" placeholder="VD: 3000000" min="0" /></div>
+          <div class="form-group form-btn-group"><button class="btn-primary" onclick="addBudget()">💾 Lưu ngân sách</button></div>
+        </div>
+      </div>
+      <div class="card"><div class="card-title">Ngân sách các danh mục</div><div id="budget-cards"></div></div>
+    </section>
+
+    <!-- TAB 4: MỤC TIÊU -->
+    <section id="tab-muc-tieu" class="tab-content">
+      <div class="page-header"><h1 class="page-title">Mục tiêu tiết kiệm</h1></div>
+      <div class="card form-card">
+        <div class="card-title">➕ Thêm mục tiêu mới</div>
+        <div class="form-grid">
+          <div class="form-group"><label>Tên mục tiêu</label><input type="text" id="goal-name" placeholder="VD: Mua laptop mới" /></div>
+          <div class="form-group"><label>Số tiền cần (đ)</label><input type="number" id="goal-target" placeholder="VD: 20000000" min="0" /></div>
+          <div class="form-group"><label>Đã tiết kiệm (đ)</label><input type="number" id="goal-saved" placeholder="VD: 5000000" min="0" /></div>
+          <div class="form-group"><label>Hạn chót</label><input type="date" id="goal-deadline" /></div>
+          <div class="form-group form-btn-group"><button class="btn-primary" onclick="addGoal()">💾 Lưu mục tiêu</button></div>
+        </div>
+      </div>
+      <div class="goals-grid" id="goals-list"></div>
+    </section>
+
+    <!-- TAB 5: BÁO CÁO -->
+    <section id="tab-bao-cao" class="tab-content">
+      <div class="page-header"><h1 class="page-title">Báo cáo</h1></div>
+      <div class="stats-grid">
+        <div class="stat-card green"><div class="stat-label">Tổng thu nhập</div><div class="stat-value" id="rpt-income">0 đ</div></div>
+        <div class="stat-card red"><div class="stat-label">Tổng chi tiêu</div><div class="stat-value" id="rpt-expense">0 đ</div></div>
+        <div class="stat-card blue"><div class="stat-label">Tiết kiệm được</div><div class="stat-value" id="rpt-saving">0 đ</div></div>
+        <div class="stat-card purple"><div class="stat-label">Số giao dịch</div><div class="stat-value" id="rpt-count">0</div></div>
+      </div>
+      <div class="card"><div class="card-title">Chi tiêu theo danh mục</div><div id="report-category-list"></div></div>
+    </section>
+
+    <!-- TAB 6: CÀI ĐẶT -->
+    <section id="tab-cai-dat" class="tab-content">
+      <div class="page-header"><h1 class="page-title">Cài đặt</h1></div>
+      <div class="card form-card">
+        <div class="card-title">👤 Thông tin cá nhân</div>
+        <div class="form-grid">
+          <div class="form-group"><label>Họ và tên</label><input type="text" id="setting-name" value="Nguyễn An" /></div>
+          <div class="form-group"><label>Email</label><input type="email" id="setting-email" placeholder="email@example.com" /></div>
+          <div class="form-group form-btn-group"><button class="btn-primary" onclick="saveSettings()">💾 Lưu cài đặt</button></div>
+        </div>
+      </div>
+      <div class="card form-card">
+        <div class="card-title">🗑️ Xóa toàn bộ dữ liệu</div>
+        <p style="color:#888;margin-bottom:12px;">Xóa tất cả giao dịch, ngân sách và mục tiêu đã nhập.</p>
+        <button class="btn-danger" onclick="clearAllData()">🗑️ Xóa tất cả dữ liệu</button>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
