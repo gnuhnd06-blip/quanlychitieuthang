@@ -1,6 +1,5 @@
-// ============================================================
-// 1. DỮ LIỆU
-// ============================================================
+
+// DỮ LIỆu
 function loadData(key) { const r = localStorage.getItem(key); return r ? JSON.parse(r) : []; }
 function saveData(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
 
@@ -14,9 +13,7 @@ const CAT_COLORS = { 'Ăn uống':'#4caf82','Di lại':'#5b9cf6','Mua sắm':'#f
 function formatMoney(a) { return a.toLocaleString('vi-VN') + ' đ'; }
 function formatDate(s) { if (!s) return ''; const [y,m,d] = s.split('-'); return `${d}/${m}/${y}`; }
 
-// ============================================================
-// 2. SIDEBAR TOGGLE - đẩy main content, không đè
-// ============================================================
+//  SIDEBAR TOGGLE - đẩy main content, không đè
 let sidebarOpen = true;
 
 function toggleSidebar() {
@@ -25,9 +22,8 @@ function toggleSidebar() {
   document.getElementById('content-wrapper').classList.toggle('expanded', !sidebarOpen);
 }
 
-// ============================================================
-// 3. CHUYỂN TAB
-// ============================================================
+//  CHUYỂN TAB
+
 function switchTab(tabName) {
   document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
@@ -44,9 +40,8 @@ document.querySelectorAll('.nav-item').forEach(item => {
   item.addEventListener('click', function(e) { e.preventDefault(); switchTab(this.dataset.tab); });
 });
 
-// ============================================================
-// 4. GIAO DỊCH
-// ============================================================
+//  GIAO DỊCH
+
 function addTransaction() {
   const type     = document.getElementById('tx-type').value;
   const category = document.getElementById('tx-category').value;
@@ -86,9 +81,7 @@ function renderTransactionTable() {
     </tr>`).join('');
 }
 
-// ============================================================
 // 5. NGÂN SÁCH
-// ============================================================
 function getSpentByCategory(category) {
   const now = new Date(), y = now.getFullYear(), m = now.getMonth() + 1;
   return loadData(KEY_TX)
@@ -138,9 +131,8 @@ function renderBudgetCards() {
   }).join('');
 }
 
-// ============================================================
 // 6. MỤC TIÊU
-// ============================================================
+
 function addGoal() {
   const name     = document.getElementById('goal-name').value.trim();
   const target   = parseFloat(document.getElementById('goal-target').value);
@@ -182,9 +174,7 @@ function renderGoals() {
   }).join('');
 }
 
-// ============================================================
 // 7. TỔNG QUAN
-// ============================================================
 function refreshOverview() {
   const txList = loadData(KEY_TX);
   let income = 0, expense = 0;
@@ -225,9 +215,7 @@ function refreshOverview() {
   drawLineChart(txList);
 }
 
-// ============================================================
 // 8. BÁO CÁO
-// ============================================================
 function renderReport() {
   const txList = loadData(KEY_TX);
   let income = 0, expense = 0;
@@ -246,9 +234,7 @@ function renderReport() {
     cats.map(([cat, total]) => `<div class="report-cat-item"><span>${CAT_ICONS[cat]||'📦'} ${cat}</span><span style="font-weight:700;color:var(--red)">-${formatMoney(total)}</span></div>`).join('');
 }
 
-// ============================================================
 // 9. CÀI ĐẶT
-// ============================================================
 function saveSettings() {
   const name = document.getElementById('setting-name').value.trim();
   if (!name) return alert('Vui lòng nhập tên!');
@@ -263,9 +249,7 @@ function clearAllData() {
   refreshOverview();
 }
 
-// ============================================================
 // 10. BIỂU ĐỒ
-// ============================================================
 function drawDonutChart(txList) {
   const canvas = document.getElementById('donut-chart');
   if (!canvas) return;
@@ -319,9 +303,7 @@ function drawLineChart(txList) {
   [0,7,14,21,29].forEach(i => ctx.fillText(days[i].slice(5), toX(i), H-8));
 }
 
-// ============================================================
 // KHỞI ĐỘNG
-// ============================================================
 document.addEventListener('DOMContentLoaded', function() {
   const today = new Date().toISOString().slice(0,10);
   const txDateInput = document.getElementById('tx-date');
